@@ -3,6 +3,9 @@ package com.android.fundallapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.android.fundallapp.auth.data.localdata.Authpreference
+import com.android.fundallapp.auth.data.localdata.Authpreference.Companion.AUTH_KEY
+import com.android.fundallapp.auth.data.model.UserData
 import com.android.fundallapp.databinding.ActivityAuthBinding
 import com.android.fundallapp.databinding.ActivityStartBinding
 
@@ -13,7 +16,14 @@ class StartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityStartBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val intent = Intent(this, AuthActivity::class.java)
+        Authpreference.initSharedPreference(this)
+        val userData = Authpreference.get<UserData>(AUTH_KEY)
+
+        val intent = if (userData == null){
+            Intent(this, AuthActivity::class.java)
+        }else{
+            Intent(this, MainActivity::class.java)
+        }
         startActivity(intent)
         finish()
     }
