@@ -1,6 +1,7 @@
 package com.android.fundallapp.auth.presentation.screen
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -16,11 +17,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import coil.load
+import com.android.fundallapp.MainActivity
 import com.android.fundallapp.R
+import com.android.fundallapp.auth.data.localdata.Authpreference
+import com.android.fundallapp.auth.data.model.UserData
 import com.android.fundallapp.auth.data.model.login.LoginRequest
 import com.android.fundallapp.auth.presentation.AuthViewModel
 import com.android.fundallapp.databinding.LoginFragmentBinding
@@ -45,8 +51,7 @@ private val authViewModel: AuthViewModel by activityViewModels()
     private lateinit var passwordTil: TextInputLayout
     private lateinit var emailEt: TextInputEditText
     private lateinit var passwordEt: TextInputEditText
-
-    private lateinit var token: String
+    private lateinit var email: String
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,6 +63,19 @@ private val authViewModel: AuthViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val userData = Authpreference.get<UserData>(Authpreference.AUTH_KEY)
+        binding.userLoginDetail.isVisible = userData != null
+        binding.loginEmailTil.isVisible = userData == null
+        if (userData != null){
+            binding.loginEmail.text = userData.email
+            binding.loginSubtitle.text = getString(R.string.miss_you, userData.firstname)
+            binding.loginUserImg.load(
+                userData.avatar
+            )
+            email = userData.email
+        }
+
+
         views()
         progressDialog = showProgressBar()
 
@@ -65,10 +83,9 @@ private val authViewModel: AuthViewModel by activityViewModels()
             progressDialog.dismiss()
             when(login){
                 is AuthViewModel.AuthEvent.LoginSuccess -> {
-                    binding.loginUserImg.load(
-                        login.result.success.user.avatar
-                    )
-                    Toast.makeText(requireContext(), login.result.toString(), Toast.LENGTH_SHORT).show()
+                    Authpreference.put(login.result.success.user, Authpreference.AUTH_KEY)
+                    startActivity(Intent(activity, MainActivity::class.java))
+                    activity?.finish()
                 }
                 is AuthViewModel.AuthEvent.Loading -> {
                     progressDialog.show()
@@ -117,8 +134,12 @@ private val authViewModel: AuthViewModel by activityViewModels()
         binding.loginSignupTv.movementMethod = LinkMovementMethod.getInstance()
 
         binding.signinButton.setOnClickListener {
-            val loginRequest = LoginRequest(emailEt.text.toString(), passwordEt.text.toString())
-            authViewModel.signIn(loginRequest)
+//            validate email text
+//            validate password text
+            if (!emailTil.isErrorEnabled && !passwordTil.isErrorEnabled){
+                val loginRequest = LoginRequest(email, passwordEt.text.toString())
+                authViewModel.signIn(loginRequest)
+            }
         }
 
     }
@@ -128,6 +149,9 @@ private val authViewModel: AuthViewModel by activityViewModels()
         emailEt = binding.loginEmailEt
         passwordTil = binding.loginPasswordTil
         passwordEt = binding.loginPasswordEt
+        emailEt.addTextChangedListener {
+            email = it.toString()
+        }
     }
 
     override fun onDestroyView() {

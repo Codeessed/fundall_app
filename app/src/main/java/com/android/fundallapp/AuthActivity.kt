@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import com.android.fundallapp.auth.data.localdata.Authpreference
 import com.android.fundallapp.databinding.ActivityAuthBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -14,6 +15,7 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        Authpreference.initSharedPreference(this)
         val navHost = supportFragmentManager.findFragmentById(R.id.auth_navHost_Container)
                 as NavHostFragment
         val navController = navHost.findNavController()
