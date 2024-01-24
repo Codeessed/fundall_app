@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">FundallApp</string>
+    <string name="get_started">Let\'s get started</string>
+    <string name="signup_subtitle">Your first step towards a better financial lifestyle starts here.</string>
+    <string name="already_a_member">Already a member? Log In</string>
+    <string name="invite_code">Got invite code?</string>
+    <string name="terms_conditions">By clicking on sign up, you agree to our terms &amp; conditions and privacy policy</string>
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="miss_you">We miss you, %s</string>
+    <string name="login">LOG IN</string>
+    <string name="signup">SIGN UP</string>
+    <string name="new_here">New here? Create Account</string>
 </resources>
