@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.android.fundallapp.auth.presentation.screen.LoginFragment"
+        android:name="com.android.fundallapp.auth.presentation.screen.auth.LoginFragment"
         android:label="LoginFragment" >
         <action
             android:id="@+id/action_loginFragment_to_signUpFragment"
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.android.fundallapp.auth.presentation.screen.SignUpFragment"
+        android:name="com.android.fundallapp.auth.presentation.screen.auth.SignUpFragment"
         android:label="SignUpFragment" >
         <action
             android:id="@+id/action_signUpFragment_to_loginFragment"

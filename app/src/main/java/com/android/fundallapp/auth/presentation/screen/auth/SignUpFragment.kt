@@ -1,4 +1,4 @@
-package com.android.fundallapp.auth.presentation.screen
+package com.android.fundallapp.auth.presentation.screen.auth
 
 import android.app.Dialog
 import android.graphics.Color
@@ -6,7 +6,6 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
-import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
@@ -14,7 +13,6 @@ import android.text.style.RelativeSizeSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AutoCompleteTextView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -23,7 +21,6 @@ import androidx.navigation.fragment.findNavController
 import com.android.fundallapp.R
 import com.android.fundallapp.auth.data.model.signup.SignUpRequest
 import com.android.fundallapp.auth.presentation.AuthViewModel
-import com.android.fundallapp.databinding.LoginFragmentBinding
 import com.android.fundallapp.databinding.SignUpFragmentBinding
 import com.android.fundallapp.utils.observer
 import com.android.fundallapp.utils.showProgressBar
@@ -37,7 +34,6 @@ class SignUpFragment: Fragment() {
     private  val binding get()= _binding!!
 
     private val authViewModel: AuthViewModel by activityViewModels()
-//    private var kidsList: ArrayList<KidDetails> = ArrayList()
 
     private lateinit var firstNameTil: TextInputLayout
     private lateinit var lastNameTil: TextInputLayout

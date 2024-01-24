@@ -7,7 +7,10 @@
     <string name="terms_conditions">By clicking on sign up, you agree to our terms &amp; conditions and privacy policy</string>
     <string name="welcome_back">Welcome Back!</string>
     <string name="miss_you">We miss you, %s</string>
+    <string name="trans_amt_holder">%s transactions</string>
     <string name="login">LOG IN</string>
     <string name="signup">SIGN UP</string>
     <string name="new_here">New here? Create Account</string>
+    <string name="back">Back</string>
+    <string name="analytics">Analytics</string>
 </resources>
