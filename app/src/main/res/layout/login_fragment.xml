@@ -78,7 +78,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_centerInParent="true"
-                        android:scaleType="centerCrop" />
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_user"/>
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
@@ -148,7 +149,7 @@
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/signup_button"
+            android:id="@+id/signin_button"
             style="@style/Widget.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

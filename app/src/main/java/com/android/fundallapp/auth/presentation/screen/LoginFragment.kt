@@ -1,4 +1,4 @@
-package com.android.fundallapp.auth.screen
+package com.android.fundallapp.auth.presentation.screen
 
 import android.app.Dialog
 import android.graphics.Color
@@ -15,10 +15,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import coil.load
 import com.android.fundallapp.R
+import com.android.fundallapp.auth.data.model.login.LoginRequest
+import com.android.fundallapp.auth.presentation.AuthViewModel
 import com.android.fundallapp.databinding.LoginFragmentBinding
+import com.android.fundallapp.utils.observer
+import com.android.fundallapp.utils.showProgressBar
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,10 +36,15 @@ class LoginFragment: Fragment() {
     private  val binding get()= _binding!!
 //
 //    private val kiddoViewModel: KiddoViewModel by activityViewModels()
-//    private val utilityViewModel: UtilityViewModel by activityViewModels()
+private val authViewModel: AuthViewModel by activityViewModels()
 //    private var kidsList: ArrayList<KidDetails> = ArrayList()
 
     private lateinit var progressDialog: Dialog
+
+    private lateinit var emailTil: TextInputLayout
+    private lateinit var passwordTil: TextInputLayout
+    private lateinit var emailEt: TextInputEditText
+    private lateinit var passwordEt: TextInputEditText
 
     private lateinit var token: String
     override fun onCreateView(
@@ -44,8 +58,27 @@ class LoginFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        token = "JWT ${AuthPreference.getToken(TOKEN_KEY)}"
-//        progressDialog = showProgressBar()
+        views()
+        progressDialog = showProgressBar()
+
+        observer(authViewModel.loginUser){ login ->
+            progressDialog.dismiss()
+            when(login){
+                is AuthViewModel.AuthEvent.LoginSuccess -> {
+                    binding.loginUserImg.load(
+                        login.result.success.user.avatar
+                    )
+                    Toast.makeText(requireContext(), login.result.toString(), Toast.LENGTH_SHORT).show()
+                }
+                is AuthViewModel.AuthEvent.Loading -> {
+                    progressDialog.show()
+                }
+                is AuthViewModel.AuthEvent.Failure -> {
+                    Toast.makeText(requireContext(), login.errorText, Toast.LENGTH_SHORT).show()
+                }
+                else -> Unit
+            }
+        }
 
         val signUpText = SpannableStringBuilder(getString(R.string.new_here))
 
@@ -53,11 +86,6 @@ class LoginFragment: Fragment() {
 
             override fun onClick(view: View) {
                 findNavController().navigate(R.id.action_loginFragment_to_signUpFragment)
-            }
-
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.isUnderlineText = false
             }
         }
         signUpText.setSpan(
@@ -88,6 +116,18 @@ class LoginFragment: Fragment() {
         binding.loginSignupTv.isClickable = true
         binding.loginSignupTv.movementMethod = LinkMovementMethod.getInstance()
 
+        binding.signinButton.setOnClickListener {
+            val loginRequest = LoginRequest(emailEt.text.toString(), passwordEt.text.toString())
+            authViewModel.signIn(loginRequest)
+        }
+
+    }
+
+    private fun views(){
+        emailTil = binding.loginEmailTil
+        emailEt = binding.loginEmailEt
+        passwordTil = binding.loginPasswordTil
+        passwordEt = binding.loginPasswordEt
     }
 
     override fun onDestroyView() {
