@@ -3,6 +3,7 @@
     <style name="CustomEditTextStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <item name="boxStrokeColor">@color/primary</item>
         <item name="cursorColor">@color/primary</item>
+        <item name="cursorErrorColor">@color/primary</item>
         <item name="boxBackgroundColor">@android:color/transparent</item>
         <item name="hintTextColor">@color/hint_text_color</item>
 
@@ -13,8 +14,13 @@
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/black</item>
         <item name="textAllCaps">true</item>
-        <item name="android:paddingTop">15dp</item>
-        <item name="android:paddingBottom">15dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@drawable/rounded_corner</item>
     </style>
 
 </resources>

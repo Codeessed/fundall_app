@@ -1,4 +1,4 @@
-package com.android.fundallapp.auth.presentation.screen
+package com.android.fundallapp.auth.presentation.screen.auth
 
 import android.app.Dialog
 import android.graphics.Color
@@ -6,7 +6,6 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
-import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
@@ -14,7 +13,6 @@ import android.text.style.RelativeSizeSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AutoCompleteTextView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -23,8 +21,8 @@ import androidx.navigation.fragment.findNavController
 import com.android.fundallapp.R
 import com.android.fundallapp.auth.data.model.signup.SignUpRequest
 import com.android.fundallapp.auth.presentation.AuthViewModel
-import com.android.fundallapp.databinding.LoginFragmentBinding
 import com.android.fundallapp.databinding.SignUpFragmentBinding
+import com.android.fundallapp.utils.Contants.validated
 import com.android.fundallapp.utils.observer
 import com.android.fundallapp.utils.showProgressBar
 import com.google.android.material.textfield.TextInputEditText
@@ -37,7 +35,6 @@ class SignUpFragment: Fragment() {
     private  val binding get()= _binding!!
 
     private val authViewModel: AuthViewModel by activityViewModels()
-//    private var kidsList: ArrayList<KidDetails> = ArrayList()
 
     private lateinit var firstNameTil: TextInputLayout
     private lateinit var lastNameTil: TextInputLayout
@@ -70,7 +67,8 @@ class SignUpFragment: Fragment() {
             progressDialog.dismiss()
             when(signUp){
                 is AuthViewModel.AuthEvent.SignUpSuccess -> {
-                    Toast.makeText(requireContext(), signUp.result.toString(), Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_signUpFragment_to_loginFragment)
+                    Toast.makeText(requireContext(), "Registration successful, verify email to login", Toast.LENGTH_SHORT).show()
                 }
                 is AuthViewModel.AuthEvent.Loading -> {
                     progressDialog.show()
@@ -135,8 +133,23 @@ class SignUpFragment: Fragment() {
         binding.signUpBtmText.setText(termsText, TextView.BufferType.SPANNABLE)
 
         binding.signupButton.setOnClickListener {
-            val signUpRequest = SignUpRequest(firstNameEt.text.toString(), lastNameEt.text.toString(), emailEt.text.toString(), passwordEt.text.toString(), confirmPasswordEt.text.toString())
-            authViewModel.signUp(signUpRequest)
+
+            if (firstNameEt.text.toString().isEmpty()  || lastNameEt.text.toString().isEmpty()  || emailEt.text.toString().isEmpty()  || passwordEt.text.toString().isEmpty()  || confirmPasswordEt.text.toString().isEmpty()){
+                Toast.makeText(requireContext(), "Please fill all details", Toast.LENGTH_SHORT)
+                    .show()
+            }else{
+                validated.validateEmailOnTextChanged(emailEt.text.toString(), emailTil)
+                validated.validateFieldForName(firstNameEt.text.toString(), firstNameTil)
+                validated.validateFieldForName(lastNameEt.text.toString(), lastNameTil)
+                validated.validateFieldLength(passwordEt.text.toString(), passwordTil)
+                validated.validateEqualField(passwordEt.text.toString(), confirmPasswordEt.text.toString(), confirmPasswordTil)
+
+                if (!firstNameTil.isErrorEnabled && !lastNameTil.isErrorEnabled && !emailTil.isErrorEnabled &&
+                    !passwordTil.isErrorEnabled && !confirmPasswordTil.isErrorEnabled){
+                    val signUpRequest = SignUpRequest(firstNameEt.text.toString(), lastNameEt.text.toString(), emailEt.text.toString(), passwordEt.text.toString(), confirmPasswordEt.text.toString())
+                    authViewModel.signUp(signUpRequest)
+                }
+            }
         }
 
     }

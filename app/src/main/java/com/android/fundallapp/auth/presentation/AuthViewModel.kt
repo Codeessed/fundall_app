@@ -2,6 +2,7 @@ package com.android.fundallapp.auth.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.fundallapp.auth.data.model.UserData
 import com.android.fundallapp.auth.data.model.login.LoginRequest
 import com.android.fundallapp.auth.data.model.login.LoginResponse
 import com.android.fundallapp.auth.data.model.signup.SignUpRequest
@@ -11,6 +12,8 @@ import com.android.fundallapp.auth.domain.repository.AuthRepository
 import com.android.fundallapp.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -25,9 +28,13 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
     private val _loginUser = Channel<AuthEvent>()
     val loginUser = _loginUser.receiveAsFlow()
 
+    private var _userDetails = MutableStateFlow<AuthEvent>(AuthEvent.Empty)
+    val userDetails get() = _userDetails.asStateFlow()
+
     sealed class AuthEvent{
         class SignUpSuccess(val result: SignUpResponse): AuthEvent()
         class LoginSuccess(val result: LoginResponse): AuthEvent()
+        class UserDataSuccess(val result: UserData): AuthEvent()
         class Failure(val errorText: String): AuthEvent()
         object Loading: AuthEvent()
         object Empty: AuthEvent()

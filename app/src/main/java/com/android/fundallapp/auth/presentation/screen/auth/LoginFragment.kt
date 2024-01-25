@@ -1,4 +1,4 @@
-package com.android.fundallapp.auth.presentation.screen
+package com.android.fundallapp.auth.presentation.screen.auth
 
 import android.app.Dialog
 import android.content.Intent
@@ -7,7 +7,6 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
-import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
@@ -20,7 +19,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import coil.load
 import com.android.fundallapp.MainActivity
@@ -40,10 +39,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoginFragment: Fragment() {
     private var _binding : LoginFragmentBinding? = null
     private  val binding get()= _binding!!
-//
-//    private val kiddoViewModel: KiddoViewModel by activityViewModels()
-private val authViewModel: AuthViewModel by activityViewModels()
-//    private var kidsList: ArrayList<KidDetails> = ArrayList()
+
+    private val authViewModel: AuthViewModel by viewModels()
 
     private lateinit var progressDialog: Dialog
 
@@ -51,7 +48,7 @@ private val authViewModel: AuthViewModel by activityViewModels()
     private lateinit var passwordTil: TextInputLayout
     private lateinit var emailEt: TextInputEditText
     private lateinit var passwordEt: TextInputEditText
-    private lateinit var email: String
+    private var email = ""
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -134,9 +131,10 @@ private val authViewModel: AuthViewModel by activityViewModels()
         binding.loginSignupTv.movementMethod = LinkMovementMethod.getInstance()
 
         binding.signinButton.setOnClickListener {
-//            validate email text
-//            validate password text
-            if (!emailTil.isErrorEnabled && !passwordTil.isErrorEnabled){
+            if(email.isEmpty() || passwordEt.text.toString().isEmpty()){
+                Toast.makeText(requireContext(), "Please fill all details", Toast.LENGTH_SHORT)
+                    .show()
+            }else{
                 val loginRequest = LoginRequest(email, passwordEt.text.toString())
                 authViewModel.signIn(loginRequest)
             }
@@ -150,7 +148,7 @@ private val authViewModel: AuthViewModel by activityViewModels()
         passwordTil = binding.loginPasswordTil
         passwordEt = binding.loginPasswordEt
         emailEt.addTextChangedListener {
-            email = it.toString()
+             email = it.toString()
         }
     }
 
