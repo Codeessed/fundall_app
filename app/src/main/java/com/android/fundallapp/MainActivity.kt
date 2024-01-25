@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
                 as NavHostFragment
         val navController = navHost.findNavController()
         val navGraph = navController.navInflater.inflate(R.navigation.main_nav_graph)
-        navGraph.setStartDestination(R.id.analyticsFragment)
+        navGraph.setStartDestination(R.id.homeFragment)
         navController.graph = navGraph
     }
 }

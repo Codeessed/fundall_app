@@ -48,7 +48,7 @@ class LoginFragment: Fragment() {
     private lateinit var passwordTil: TextInputLayout
     private lateinit var emailEt: TextInputEditText
     private lateinit var passwordEt: TextInputEditText
-    private lateinit var email: String
+    private var email = ""
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -131,9 +131,10 @@ class LoginFragment: Fragment() {
         binding.loginSignupTv.movementMethod = LinkMovementMethod.getInstance()
 
         binding.signinButton.setOnClickListener {
-//            validate email text
-//            validate password text
-            if (!emailTil.isErrorEnabled && !passwordTil.isErrorEnabled){
+            if(email.isEmpty() || passwordEt.text.toString().isEmpty()){
+                Toast.makeText(requireContext(), "Please fill all details", Toast.LENGTH_SHORT)
+                    .show()
+            }else{
                 val loginRequest = LoginRequest(email, passwordEt.text.toString())
                 authViewModel.signIn(loginRequest)
             }
@@ -147,7 +148,7 @@ class LoginFragment: Fragment() {
         passwordTil = binding.loginPasswordTil
         passwordEt = binding.loginPasswordEt
         emailEt.addTextChangedListener {
-            email = it.toString()
+             email = it.toString()
         }
     }
 

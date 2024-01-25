@@ -42,15 +42,6 @@ class HomeFragment: Fragment() {
     private var _binding : HomeFragmentBinding? = null
     private  val binding get()= _binding!!
 
-    private val authViewModel: AuthViewModel by activityViewModels()
-
-    private lateinit var progressDialog: Dialog
-
-    private lateinit var emailTil: TextInputLayout
-    private lateinit var passwordTil: TextInputLayout
-    private lateinit var emailEt: TextInputEditText
-    private lateinit var passwordEt: TextInputEditText
-    private lateinit var email: String
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -63,6 +54,12 @@ class HomeFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val userData = Authpreference.get<UserData>(Authpreference.AUTH_KEY)
+        binding.analyticsCv.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_analyticsFragment)
+        }
+        binding.requestCardCv.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_newCardFragment)
+        }
 
     }
     override fun onDestroyView() {

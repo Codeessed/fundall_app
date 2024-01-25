@@ -21,7 +21,7 @@ class StartActivity : AppCompatActivity() {
         binding = ActivityStartBinding.inflate(layoutInflater)
         setContentView(binding.root)
         GlobalScope.launch(Dispatchers.Main) {
-            delay(5000)
+            delay(3000)
 
             Authpreference.initSharedPreference(this@StartActivity)
             val userData = Authpreference.get<UserData>(AUTH_KEY)
